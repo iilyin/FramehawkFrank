@@ -1,0 +1,178 @@
+Feature: Automated Sample Startup of the Launchpad Application
+
+  Scenario: Launching the resetted app
+    Given I reset the app
+    Then I should see a "I Accept" button
+
+  Scenario: Accepting the EULA and getting to the login page
+    When I touch the button marked "I Accept"
+    Then I should see "Welcome to Framehawk"
+    Then I should see "login_dialog_bg"
+
+   Scenario: Logging in with the incorrect credentials
+    When I type "david.nguyen@framehawk.com" into the "Enter user ID" text field
+    When I type "framehawk" into the "Enter password" text field
+    When I touch the button marked "OK"
+    Then I wait to see "Login Error!"
+    Then I should see an alert view button marked "OK"
+	When I wait for 10 seconds
+    When I touch the alert view button marked "OK" at 20,20
+
+  Scenario: Logging in with the correct credentials
+    Then I wait to see "Welcome to Framehawk"
+    Then I should see "login_dialog_bg"
+    When I type "david.nguyen@framehawk.com" into the "Enter user ID" text field
+    When I type "framehawk101" into the "Enter password" text field
+	When I wait for 10 seconds
+    When I touch the button marked "OK"
+    Then I wait to see "launchpad_splash"
+    Then I should see "Setup PIN"
+
+  Scenario: The PIN should have 12 buttons
+    Then I should see a "1" button
+    Then I should see a "2" button
+    Then I should see a "3" button
+    Then I should see a "4" button
+    Then I should see a "5" button
+    Then I should see a "6" button
+    Then I should see a "7" button
+    Then I should see a "8" button
+    Then I should see a "9" button
+    Then I should see a "0" button
+    Then I should see a "?" button
+    Then I should see a "pin back button" button
+
+  Scenario: Clicking the ? button
+    When I touch the button marked "?"
+    Then I should see "Framehawk Canvas PIN"
+    When I touch the button marked "Close"
+    Then I should not see "Framehawk Canvas PIN"
+
+  Scenario: Setting up the PIN incorrectly
+    When I touch the button marked "1"
+    When I touch the button marked "2"
+    When I touch the button marked "3"
+    When I touch the button marked "4"
+    Then I wait to see "Re-enter PIN"
+    When I touch the button marked "1"
+    When I touch the button marked "1"
+    When I touch the button marked "3"
+    When I touch the button marked "4"
+    Then I wait to see "PIN Mismatch. Try again!"
+    Then I wait to see "Setup PIN"
+
+  Scenario: Setting up the PIN correctly
+    When I touch the button marked "1"
+    When I touch the button marked "2"
+    When I touch the button marked "3"
+    When I touch the button marked "4"
+    Then I wait to see "Re-enter PIN"
+    When I touch the button marked "1"
+    When I touch the button marked "2"
+    When I touch the button marked "3"
+    When I touch the button marked "4"
+    Then I wait to see "Choose a Profile"
+
+  Scenario: Check to see that Framehawk Internal Services is not in the Installed tab
+    When I touch the tab button marked "Library"
+    Then I should see a nonhidden table view cell labeled "Framehawk Internal Services"
+    When I touch the tab button marked "Installed"
+	Then I wait for 5 seconds
+    Then I should not see a hidden table view cell labeled "Framehawk Internal Services"
+
+  Scenario: I should see the uninstalled services in the Library tab
+    When I touch the tab button marked "Library"
+    Then I should see a nonhidden table view cell labeled "Framehawk Internal Services"
+
+  Scenario: Choosing a Profile
+    When I touch the table cell labeled "Framehawk Internal Services"
+    Then I wait to see "menu drawer tab"
+    Then I should see a "menu easy login icon" button
+    Then I should see a "menu profiles icon" button
+    Then I should see a "menu settings icon" button
+    Then I should see a "menu help icon" button
+
+  Scenario: Testing the drawer
+    When I touch the button marked "menu drawer tab"
+    When I touch the button marked "menu drawer tab"
+    Then I wait for the animation
+
+  Scenario: Starting a session
+    Then I wait to not see "menu close icon"
+    When I touch the menu selection cell marked "GMail"
+    Then I wait to see "preloader_bg.png"
+    Then I wait to not see "preloader_bg.png"
+    When I touch the button marked "menu drawer tab"
+    Then I wait for the animation
+    Then I wait to see "menu close icon"
+    Then I should see the "GMail" menu selection cell highlighted
+
+  Scenario: Login Assistant Dialog should appear
+    When I touch the button marked "menu easy login icon"
+    Then I wait to see "login_dialog_bg"
+
+  Scenario: When I don't save Login Assistant credentials
+    When I touch the button marked "No Thanks"
+    Then I wait to not see "login_dialog_bg"
+
+  Scenario: When I save Login Assistant credentials
+    When I touch the button marked "menu drawer tab"
+    Then I wait for the animation
+    When I touch the button marked "menu easy login icon"
+    Then I wait to see "login_dialog_bg"
+    When I type "david.nguyen@framehawk.com" into the "Enter user name" text field
+    When I type "framehawk" into the "Enter password" text field
+    When I touch the button marked "OK"
+    Then I wait to see "login_assistant_dialog_bg"
+    Then I touch the button marked "Log Me In"
+    Then I wait to not see "login_assistant_dialog_bg"
+
+  Scenario: I should no longer be prompt for credentials
+    When I touch the button marked "menu drawer tab"
+    Then I wait for the animation
+    When I touch the button marked "menu easy login icon"
+    Then I wait to see "login_assistant_dialog_bg"
+    Then I touch the button marked "Dismiss"
+    Then I wait to not see "login_assistant_dialog_bg"
+
+  Scenario: Profile Dialog should appear
+    When I touch the button marked "menu drawer tab"
+    Then I wait for the animation
+    When I touch the button marked "menu profiles icon"
+    Then I wait to see "profile_selection_bg"
+    When I touch the button marked "Cancel"
+    Then I wait to not see "Choose a Profile"
+
+  Scenario: Setting Dialog should appear
+    When I touch the button marked "menu settings icon"
+    Then I wait to see "service_settings_bg"
+    Then I should see a navigation bar titled "Settings"
+    Then I should see a "Reset Framehawk Login" button
+    Then I should see a "Reset PIN" button
+    Then I should see a "Done" button
+
+  Scenario: Checking saved login information
+    Then I touch the table cell "GMail" info button
+    Then I wait to see "Enable Login Assistant"
+    Then I should see a "Done" button
+    Then switch "Enable Login Assistant" should be on
+	When I wait for 10 seconds
+    When I touch the button marked "Done"
+    Then I wait to not see "service_settings_bg"
+
+  Scenario: Help Dialog should appear
+    When I touch the button marked "menu help icon"
+    Then I wait to see "help_screen.png"
+    Then I should see a "Close" button
+    When I touch the button marked "Close"
+    Then I wait to not see "help_screen.png"
+	
+  Scenario: Closing the session
+    Then I wait to see "menu close icon"
+    Then I should see "menu_item_selected_bg.png"
+    When I touch the menu selection cell "GMail" close button
+  	Then I wait for the animation
+    Then I should see the "GMail" menu selection cell unhighlighted
+    Then I should not see "menu close icon"
+
+
